@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 xAxis, yAxis = 3, 2
 
 
@@ -8,6 +10,15 @@ class GameState:
         self._board[-1][-1] = 1
         self._activePlayer = 0
         self._player_locations = [None, None]
+
+    def forecast_move(self, move):
+        if move not in self.get_legal_moves():
+            raise RuntimeError("Attempted forecast of illegal move")
+        new_board = deepcopy(self)
+        new_board._board[move[0]][move[1]] = 1
+        new_board._player_locations[self._activePlayer] = move
+        new_board._activePlayer ^= 1
+        return new_board
 
     def get_legal_moves(self):
         location = self._player_locations[self._activePlayer]
